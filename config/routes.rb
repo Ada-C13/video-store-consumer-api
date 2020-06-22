@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   resources :movies, only: [:index, :show], param: :title
   get "/library", to: "movies#index", as: "library"
+  get "/search", to: "movies#index", as: "search"
 
   post "/rentals/:title/check-out", to: "rentals#check_out", as: "check_out"
   post "/rentals/:title/return", to: "rentals#check_in", as: "check_in"
