@@ -2,27 +2,13 @@ class MoviesController < ApplicationController
   before_action :require_movie, only: [:show]
 
   def index
-    data = Movie.all
-    render status: :ok, json: data
-  end
-
-  def search_input
-  end
-
-  def search
-    @movie = Movie.find_by(title: params[:title])
-    if !@movie
-      @data = MovieWrapper.search(params[:title])
-
+    if params[:query]
+      data = MovieWrapper.search(params[:query])
     else
-      render(
-        status: :ok,
-        json: @movie.as_json(
-          only: [:title, :overview, :release_date, :inventory],
-          methods: [:available_inventory]
-          )
-      )
+      data = Movie.all
     end
+
+    render status: :ok, json: data
   end
 
   # TODO: create a new movie instance in our rental library 
