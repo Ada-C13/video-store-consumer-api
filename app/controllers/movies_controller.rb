@@ -9,7 +9,20 @@ class MoviesController < ApplicationController
       @movies = Movie.all
     end
 
-    # render status: :ok, json: data
+    render status: :ok, json: data
+  end
+
+  def create
+    new_movie = MovieWrapper.construct_movie(params)
+    new_movie.inventory = 10
+    new_movie.image_url = params["image_url"]
+    new_movie.external_id = params["external_id"]
+    
+    if new_movie.save
+      render status: :ok, json: {}
+    else
+      render status: :bad_request, json: { errors: new_movie.errors.messages }
+    end
   end
 
   def show
