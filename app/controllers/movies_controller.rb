@@ -11,6 +11,14 @@ class MoviesController < ApplicationController
     render status: :ok, json: data
   end
 
+  # TODO: create a new movie instance in our rental library 
+  def create
+    # step 1. to find the specific movie, we need to use the external_id from the params that we get from the React Movies.js
+    # https://developers.themoviedb.org/3/movies/get-movie-details
+    
+    # setp 2. 
+  end
+
   def show
     render(
       status: :ok,
