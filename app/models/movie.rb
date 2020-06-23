@@ -3,7 +3,7 @@ class Movie < ApplicationRecord
   has_many :customers, through: :rentals
 
   validates :title, :overview, :release_date, :image_url, :external_id, presence: true
-  # validates :title, uniqueness: true
+  validates :title, uniqueness: true
 
   def available_inventory
     self.inventory - Rental.where(movie: self, returned: false).length

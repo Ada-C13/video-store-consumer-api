@@ -24,7 +24,7 @@ class MoviesController < ApplicationController
   def create
     movie = Movie.new(movie_params)
     if movie.save
-      render json: movie.as_json, status: :ok
+      render json: movie.as_json, status: :created
       return
     else
       render json: {errors: movie.errors.messages}, status: :bad_request
