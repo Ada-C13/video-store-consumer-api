@@ -29,6 +29,33 @@ class MovieTest < ActiveSupport::TestCase
     end
   end
 
+  describe "validations" do
+    it "must have a title" do
+      @movie.title = nil
+
+      expect(@movie.valid?).must_equal false
+      expect(@movie.errors.messages).must_include :title
+      expect(@movie.errors.messages[:title]).must_equal ["can't be blank"]
+    end
+
+    it "must have an external id" do
+      @movie.external_id = nil
+
+      expect(@movie.valid?).must_equal false
+      expect(@movie.errors.messages).must_include :external_id
+      expect(@movie.errors.messages[:external_id]).must_equal ["can't be blank", "has already been taken"]
+    end
+
+    it "cannot add two objects with the same external id" do
+      @movie.save
+      another_movie = Movie.create(movie_data)
+
+      expect(another_movie.valid?).must_equal false
+      expect(another_movie.errors.messages).must_include :external_id
+      expect(another_movie.errors.messages[:external_id]).must_equal ["has already been taken"]
+    end
+  end
+
   describe "available_inventory" do
     it "Matches inventory if the movie isn't checked out" do
       # Make sure no movies are checked out
