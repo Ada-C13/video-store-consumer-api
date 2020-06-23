@@ -43,7 +43,7 @@ class MovieTest < ActiveSupport::TestCase
 
       expect(@movie.valid?).must_equal false
       expect(@movie.errors.messages).must_include :external_id
-      expect(@movie.errors.messages[:external_id]).must_equal ["can't be blank", "has already been taken"]
+      expect(@movie.errors.messages[:external_id]).must_equal ["can't be blank"]
     end
 
     it "cannot add two objects with the same external id" do
