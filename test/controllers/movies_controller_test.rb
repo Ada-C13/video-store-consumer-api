@@ -106,7 +106,6 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
       expect(body["errors"].keys).must_include "title"
       expect(body["errors"].keys).must_include "overview"
       expect(body["errors"].keys).must_include "release_date"
-      # expect(body["errors"].keys).must_include "image_url"
       expect(body["errors"].keys).must_include "external_id"
     end
 
