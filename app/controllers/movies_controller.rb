@@ -6,9 +6,10 @@ class MoviesController < ApplicationController
       data = MovieWrapper.search(params[:query])
     else
       data = Movie.all
+      @movies = Movie.all
     end
 
-    render status: :ok, json: data
+    # render status: :ok, json: data
   end
 
   def show

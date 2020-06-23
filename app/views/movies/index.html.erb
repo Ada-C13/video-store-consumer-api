@@ -1,0 +1,23 @@
+<h2>List of Movies</h2>
+<table class="table">
+  <thead>
+    <tr>
+      <th>Title</th>
+      <th>Overview</th>
+      <th>Release Date</th>
+      <th>Inventory</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @movies.each do |movie| %>
+      <tr>
+        <td><%= link_to movie.title, movie_path(movie) %></td>
+        <td><%= movie.overview %></td>
+        <td><%= movie.release_date %></td>
+        <td><%= movie.inventory %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= link_to "Back to Home", root_path, class: "btn btn-secondary" %>
