@@ -6,7 +6,8 @@ class MovieTest < ActiveSupport::TestCase
       "title": "Hidden Figures",
       "overview": "Some text",
       "release_date": "1960-06-16",
-      "inventory": 8
+      "inventory": 8,
+      "external_id": 100001
     }
   }
 
