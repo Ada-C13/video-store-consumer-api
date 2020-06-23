@@ -42,6 +42,24 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
     end
   end
 
+  describe "create" do
+    it "saves movie with valid parameters" do
+      params = {
+        title: "Totoro",
+        overview: "Death god conspiracy theory?",
+        release_date: "2002-11-14",
+        inventory: 8
+      }
+
+      start_count = Movie.count
+      post movies_path(params)
+      expect(Movie.count).must_equal start_count + 1
+      expect(Movie.last.title).must_equal params[:title]
+
+      must_respond_with :success
+    end
+  end
+
   describe "show" do
     it "Returns a JSON object" do
       get movie_url(title: movies(:one).title)
