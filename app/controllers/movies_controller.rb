@@ -1,5 +1,5 @@
 class MoviesController < ApplicationController
-  before_action :require_movie, only: [:show, :create]
+  before_action :require_movie, only: [:show]
 
   def index
     if params[:query]
@@ -12,8 +12,10 @@ class MoviesController < ApplicationController
   end
 # new movie
 
-  def create
-    new_movie = Movie.new(external_id: params[:external_id], title: params[:title], inventory: 7,overview: params[:overview], release_date: params[:release_date], image_url: params[:image_url] )
+  def add_movie
+    
+    new_movie = Movie.new(params[:query])
+    # new_movie = Movie.new(external_id: params[:external_id], title: params[:title], inventory: 7,overview: params[:overview], release_date: params[:release_date], image_url: params[:image_url] )
     if !Movie.find_by(external_id: new_movie.external_id)
 
       if new_movie.save
