@@ -17,7 +17,7 @@ class MoviesController < ApplicationController
       title: params["title"],
       overview: params["overview"],
       release_date: params["release_date"],
-      image_url: self.image_url(params["poster_path"]),
+      image_url: params["image_url"],
       external_id: params["id"],
       inventory: 10
     )
@@ -39,7 +39,7 @@ class MoviesController < ApplicationController
     render(
       status: :ok,
       json: @movie.as_json(
-        only: [:title, :overview, :release_date, :inventory],
+        only: [:title, :overview, :release_date, :inventory, :image_url],
         methods: [:available_inventory]
         )
       )
