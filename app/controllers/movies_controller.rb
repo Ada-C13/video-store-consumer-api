@@ -3,11 +3,11 @@ class MoviesController < ApplicationController
 
   def index
     if params[:query]
-      @movies = Movie.where("title ilike ?", "%#{params[:query]}%").all
-      if !@movies.empty?
-        data = @movies
-      else
-        data = MovieWrapper.search(params[:query])
+      data = MovieWrapper.search(params[:query]) # all ids are null, external_id is not null
+      hash = {} # {external_id => id}
+      Movie.all.select(:id, :external_id).each {|movie| hash[movie.external_id] = movie.id }
+      data.each_with_index do |item,i|
+        data[i][:id] = hash[item[:external_id]]
       end
     else
       data = Movie.all
@@ -32,7 +32,8 @@ class MoviesController < ApplicationController
       overview: params[:overview],
       release_date: params[:release_date],
       image_url: params[:image_url],
-      inventory: 1
+      inventory: 1,
+      external_id: params[:external_id]
     )
     if movie.save
       render status: :ok, json: movie
