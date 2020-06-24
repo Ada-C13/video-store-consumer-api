@@ -13,9 +13,7 @@ class MoviesController < ApplicationController
 # new movie
 
   def add_movie
-    
-    # new_movie = Movie.new(params[:movie_params])
-    new_movie = Movie.new(external_id: movie_params[:external_id], title: movie_params[:title], inventory: 7,overview: movie_params[:overview], release_date: movie_params[:release_date], image_url: movie_params[:image_url] )
+    new_movie = Movie.new(external_id: movie_params[:external_id], title: movie_params[:title],overview: movie_params[:overview], release_date: movie_params[:release_date], image_url: movie_params[:image_url] )
     if !Movie.find_by(external_id: new_movie.external_id)
 
       if new_movie.save
@@ -25,7 +23,7 @@ class MoviesController < ApplicationController
       end
 
     else   
-      render status: bad_request, json: {errors: "movie already in database"}
+      render status: :bad_request, json: {errors: "movie already in database"}
     end 
 
   end 
@@ -53,4 +51,5 @@ class MoviesController < ApplicationController
   def movie_params
     return params.permit(:external_id, :title, :inventory, :overview, :release_date, :image_url)
   end
+
 end
