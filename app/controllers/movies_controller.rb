@@ -13,7 +13,7 @@ class MoviesController < ApplicationController
 # new movie
 
   def add_movie
-    new_movie = Movie.new(external_id: movie_params[:external_id], title: movie_params[:title],overview: movie_params[:overview], release_date: movie_params[:release_date], image_url: movie_params[:image_url] )
+    new_movie = Movie.new(external_id: movie_params[:external_id], title: movie_params[:title],overview: movie_params[:overview], release_date: movie_params[:release_date], image_url: movie_params[:image_url], inventory: 7 )
     if !Movie.find_by(external_id: new_movie.external_id)
 
       if new_movie.save
