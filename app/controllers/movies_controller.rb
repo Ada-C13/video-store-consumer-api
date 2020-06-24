@@ -34,7 +34,7 @@ class MoviesController < ApplicationController
       render json: movie.as_json(only: [:id]), status: :created
       return
     else
-
+      render status: :bad_request, json: { errors: movie.errors.messages }
     end
 
     # render(
