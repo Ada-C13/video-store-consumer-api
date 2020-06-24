@@ -78,4 +78,36 @@ class MovieTest < ActiveSupport::TestCase
       after_ai.must_equal before_ai + 1
     end
   end
+
+  describe "validations" do
+    it "is invalid without a title" do
+      movie = Movie.new(
+        title: nil
+      )
+      
+      expect(movie.valid?).must_equal false
+      expect(movie.errors.messages).must_include :title
+    end
+
+    it "is valid for a movie with all required fields" do
+      movie = Movie.new(
+        title: "Test Movie"
+      )
+      expect(movie.valid?).must_equal true
+    end 
+
+    it "won't add movie twice" do
+      movie = Movie.new(
+        title: "Test Movie"
+      )
+      movie.save
+      expect(movie.valid?).must_equal true
+
+      movie2 = Movie.new(
+        title: "Test Movie"
+      )
+      movie2.save
+      expect(movie2.valid?).must_equal false
+    end 
+  end
 end
