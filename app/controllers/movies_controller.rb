@@ -14,8 +14,8 @@ class MoviesController < ApplicationController
 
   def add_movie
     
-    new_movie = Movie.new(params[:query])
-    # new_movie = Movie.new(external_id: params[:external_id], title: params[:title], inventory: 7,overview: params[:overview], release_date: params[:release_date], image_url: params[:image_url] )
+    # new_movie = Movie.new(params[:movie_params])
+    new_movie = Movie.new(external_id: movie_params[:external_id], title: movie_params[:title], inventory: 7,overview: movie_params[:overview], release_date: movie_params[:release_date], image_url: movie_params[:image_url] )
     if !Movie.find_by(external_id: new_movie.external_id)
 
       if new_movie.save
@@ -48,5 +48,9 @@ class MoviesController < ApplicationController
     unless @movie
       render status: :not_found, json: { errors: { title: ["No movie with title #{params["title"]}"] } }
     end
+  end
+
+  def movie_params
+    return params.permit(:external_id, :title, :inventory, :overview, :release_date, :image_url)
   end
 end
