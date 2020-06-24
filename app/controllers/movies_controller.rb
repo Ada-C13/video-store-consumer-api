@@ -27,7 +27,6 @@ class MoviesController < ApplicationController
   end
 
   def create
-    raise
     movie = Movie.new(
       title: params[:title],
       overview: params[:overview],
@@ -36,7 +35,7 @@ class MoviesController < ApplicationController
       inventory: 1
     )
     if movie.save
-      render status: :ok, json: { success: "success" }
+      render status: :ok, json: movie
     else
       render status: :bad_request, json: { errors: rental.errors.messages }
     end
