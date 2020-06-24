@@ -3,7 +3,12 @@ class MoviesController < ApplicationController
 
   def index
     if params[:query]
-      data = MovieWrapper.search(params[:query])
+      @movies = Movie.where("title ilike ?", "%#{params[:query]}%").all
+      if !@movies.empty?
+        data = @movies
+      else
+        data = MovieWrapper.search(params[:query])
+      end
     else
       data = Movie.all
     end
@@ -19,6 +24,22 @@ class MoviesController < ApplicationController
         methods: [:available_inventory]
         )
       )
+  end
+
+  def create
+    raise
+    movie = Movie.new(
+      title: params[:title],
+      overview: params[:overview],
+      release_date: params[:release_date],
+      image_url: params[:image_url],
+      inventory: 1
+    )
+    if movie.save
+      render status: :ok, json: { success: "success" }
+    else
+      render status: :bad_request, json: { errors: rental.errors.messages }
+    end
   end
 
   private
