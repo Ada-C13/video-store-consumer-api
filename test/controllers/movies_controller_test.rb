@@ -75,4 +75,51 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
 
     end
   end
+
+  describe "create" do
+    it "add a movie to the db" do
+      movie_hash = {
+        title: "Cinderella",
+        overview: "Cinderella has faith her dreams of a better life will come true. With help from her loyal mice friends and a wave of her Fairy Godmother's wand, Cinderella's rags are magically turned into a glorious gown and off she goes to the Royal Ball. But when the clock strikes midnight, the spell is broken, leaving a single glass slipper... the only key to the ultimate fairy-tale ending!",
+        release_date: "1997-11-02",
+        image_url: "https://image.tmdb.org/t/p/w185/wkeOjIcpuqLMW4GnVowlM9VI0JE.jpg",
+        external_id: -1
+      }
+
+      expect{post movies_path, params: movie_hash}.must_change "Movie.count", 1
+      
+      new_movie = Movie.find_by(external_id: -1)
+      expect(new_movie.title).must_equal "Cinderella"
+    
+      must_respond_with :created
+    end
+
+    it "won't add a movie if the data is invalid" do
+      movie_hash = {}
+      expect{post movies_path, params: movie_hash}.wont_change "Movie.count", 1
+      must_respond_with :bad_request
+
+      data = JSON.parse response.body
+      expect(data["errors"].keys).must_include "external_id"
+    end
+
+    it "won't add a movie to the db if it is already there" do
+      existing_movie = movies(:one)
+      existing_movie_title = existing_movie.title
+      existing_movie_release_date = existing_movie.release_date
+      existing_movie_ext_id = existing_movie.external_id
+
+      movie_hash = {
+        title: existing_movie_title,
+        release_date: existing_movie_release_date,
+        external_id: existing_movie_ext_id
+      }
+
+      expect{post movies_path, params: movie_hash}.wont_change "Movie.count", 1
+      must_respond_with :bad_request
+
+      data = JSON.parse response.body
+      expect(data["errors"].keys).must_include "external_id"
+    end
+  end
 end
