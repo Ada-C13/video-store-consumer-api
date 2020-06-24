@@ -6,6 +6,8 @@ class CustomersController < ApplicationController
   def index
     if @sort
       data = Customer.all.order(@sort)
+    elsif params[:query]
+      data = Customer.where("name like ?", "%#{params[:query]}%")
     else
       data = Customer.all
       @customers = Customer.all
