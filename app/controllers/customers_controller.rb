@@ -23,10 +23,10 @@ class CustomersController < ApplicationController
 
     if @customer
       @customer_rentals = @customer.rentals.map{|rental| { 
-        title: rental.moive.title, 
+        title: rental.movie.title, 
         checkout_date: rental.checkout_date,
         due_date: rental.due_date,
-        status: rental.status,
+        status: rental.returned,
         }}
       render json: 
         @customer_rentals.as_json(),
