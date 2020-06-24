@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :customers, only: [:index]
 
   resources :movies, only: [:index, :show], param: :title
-
+  post "/movies/add-movie", to: "movies#add_movie", as: "add_movie"
   post "/rentals/:title/check-out", to: "rentals#check_out", as: "check_out"
   post "/rentals/:title/return", to: "rentals#check_in", as: "check_in"
   get "/rentals/overdue", to: "rentals#overdue", as: "overdue"
