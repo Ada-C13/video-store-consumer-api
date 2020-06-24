@@ -3,6 +3,23 @@ class RentalsController < ApplicationController
   before_action :require_customer, only: [:check_out, :check_in]
 
   # TODO: make sure that wave 2 works all the way
+  def index
+    data = Rental.all
+
+    cleaned_data = []
+    data.each do |rental|
+      cleaned_data << {
+        id: rental.id,
+        customer: Customer.find_by(id: rental.customer_id),
+        movie: Movie.find_by(id: rental.movie_id),
+        due_date: rental.due_date,
+        returned: rental.returned,
+      }
+    end
+
+    render status: :ok, json: cleaned_data
+  end
+
   def check_out
     rental = Rental.new(movie: @movie, customer: @customer, due_date: params[:due_date])
 
