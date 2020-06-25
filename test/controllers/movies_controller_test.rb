@@ -75,4 +75,23 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
 
     end
   end
+
+  describe "add movie" do 
+    it "can create a movie" do 
+    
+      movie = movies(:one)
+      new_movie =  {
+          movie: {
+            title: movie.title
+          }
+        }
+    
+      expect {
+        post add_movie_path, params: new_movie 
+      }.must_differ "Movie.count", 1
+      assert_response :success
+      created_movie = Movie.find_by(title: new_movie[:movie][:title])
+      expect(created_movie.title).must_equal new_movie[:movie][:title]
+    end 
+  end 
 end

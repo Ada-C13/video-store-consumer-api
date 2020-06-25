@@ -27,7 +27,7 @@ class MoviesController < ApplicationController
       overview: params["overview"],
       release_date: params["release_date"],
       image_url: params["poster_path"],
-      external_id: params["id"]
+      external_id: params["external_id"]
     )
     puts movie
     if movie.save
