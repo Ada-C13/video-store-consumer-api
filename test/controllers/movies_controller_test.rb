@@ -75,4 +75,36 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
 
     end
   end
+
+  describe "create" do
+
+    let(:movie_data) {
+      { 
+        movie: {
+          title: "Some Movie", 
+          overview: "Some Overview", 
+          release_date: "2017-01-11",
+          inventory: 10
+        }
+      }
+    }
+    it "cannot create video if no title" do
+    movie_data[:movie][:title] = nil 
+
+    expect {
+      post movies_path, params: movie_data
+    }.must_differ "Movie.count", 0
+    
+    must_respond_with :bad_request
+    end
+
+    it "can create a movie" do
+
+      expect {
+        post movies_path, params: movie_data[:movie]
+      }.must_differ 'Movie.count', 1
+
+      must_respond_with :success
+    end
+  end
 end
