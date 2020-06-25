@@ -6,9 +6,14 @@ class RentalsController < ApplicationController
   def check_out
     rental = Rental.new(movie: @movie, customer: @customer, due_date: params[:due_date])
 
+    if @movie.available_inventory < 1
+      render status: :bad_request, json: { errors: rental.errors.messages }
+      return
+    end
+  
     if rental.save
       render status: :ok, json: {}
-    else
+    else  
       render status: :bad_request, json: { errors: rental.errors.messages }
     end
   end
