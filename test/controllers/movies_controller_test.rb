@@ -1,6 +1,43 @@
 require 'test_helper'
 
 class MoviesControllerTest < ActionDispatch::IntegrationTest
+  describe "add_movie" do 
+    # adds movie
+    it "will add a movie successfully" do 
+      new_movie = Movie.new(external_id: 991 , title: "new testing movie",overview: "testing overview" )
+
+
+      post add_movie_path, params: {
+        external_id: new_movie.external_id,
+        title: new_movie.title,
+        overview: new_movie.overview
+      }
+
+      must_respond_with :success
+      expect(Movie.count).must_equal 3
+      expect(Movie.last.title).must_equal "new testing movie"
+
+
+    end 
+    # cannot add a movie twice
+    it "cannot add a movie with the same external_id" do 
+
+      new_movie = movies(:one)
+      count = Movie.count 
+
+      post add_movie_path, params: {
+        external_id: new_movie.external_id,
+        title: new_movie.title,
+        overview: new_movie.overview,
+        release_date: new_movie.release_date
+      }
+
+      must_respond_with :bad_request 
+      expect(Movie.count).must_equal count 
+    end 
+  end 
+
+
   describe "index" do
     it "returns a JSON array" do
       get movies_url
