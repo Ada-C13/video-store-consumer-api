@@ -22,7 +22,7 @@ class MoviesController < ApplicationController
   end
 
   def create
-    movie = Create.new(movie_params)
+    movie = Movie.new(movie_params)
 
     if movie.save
       render status: :ok, json: {}
