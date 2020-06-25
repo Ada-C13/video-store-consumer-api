@@ -7,7 +7,12 @@ class RentalsController < ApplicationController
     rental = Rental.new(movie: @movie, customer: @customer, due_date: Date.today + 7)
 
     if rental.save
-      render status: :ok, json: {}
+      render(
+        status: :ok,
+        json: rental.as_json(
+        only: [:customer_id, :move_id, :checkout_date, :due_date, :returned]
+        )
+      )
     else
       render status: :bad_request, json: { errors: rental.errors.messages }
     end

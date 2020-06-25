@@ -2,7 +2,7 @@ class Rental < ApplicationRecord
   belongs_to :movie
   belongs_to :customer
 
-  # validates :movie, uniqueness: { scope: :customer }
+  validates :movie, uniqueness: { scope: :customer }
   validates :due_date, presence: true
   validate :due_date_in_future, on: :create
 
