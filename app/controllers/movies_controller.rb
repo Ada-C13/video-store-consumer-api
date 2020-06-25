@@ -23,16 +23,26 @@ class MoviesController < ApplicationController
 
   def create 
     movie = Movie.new(movie_params)
-    
-    if movie.save
-      render json: movie.as_json(only: [:id]), status: :created
+    existing_movie = Movie.find_by(external_id: movie.external_id)
+
+    # if movie was already added to library, update inventory
+    if existing_movie
+      existing_movie.inventory = existing_movie.inventory + 1
+      existing_movie.save
       return
     else
-      render json: {
-        errors: movie.errors.messages
-        }, status: :bad_request
-        return   
+      # else save new movie to database
+      if movie.save 
+        render json: movie.as_json(only: [:id]), status: :created
+        return
+      else
+        render json: {
+          errors: movie.errors.messages
+          }, status: :bad_request
+          return   
+      end
     end
+
   end 
 
   private
@@ -45,7 +55,7 @@ class MoviesController < ApplicationController
   end
 
   def movie_params
-    return params.permit(:title, :overview, :release_date, :image_url, :external_id)
+    return params.permit(:title, :overview, :release_date, :image_url, :external_id, :inventory)
   end
 end
 

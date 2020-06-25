@@ -1,6 +1,15 @@
 require 'test_helper'
 
 class MoviesControllerTest < ActionDispatch::IntegrationTest
+  def check_response(expected_type:, expected_status: :success)
+    must_respond_with expected_status
+    expect(response.header['Content-Type']).must_include 'json'
+
+    body = JSON.parse(response.body)
+    expect(body).must_be_kind_of expected_type
+    return body
+  end
+
   describe "index" do
     it "returns a JSON array" do
       get movies_url
@@ -75,4 +84,46 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
 
     end
   end
+
+  describe "create" do 
+    let (:valid_new_movie){
+      {
+        title: "A New Hope",
+        overview: "cool movie",
+        release_date: Date.today,
+        image_url: "testurl.com",
+        external_id: 1000
+      }
+    }
+
+    let (:invalid_new_movie){
+      {
+        title: "VeryVideo",
+        overview: "MyText",
+        release_date: 2017-01-11,
+        image_url: "testurl.com",
+        external_id: 1001 # this makes this movie invalid b/c fixture already has a movie with this external id
+      }
+    }
+
+    it "can create a valid movie and add it to this API's movie db" do 
+      expect {
+        post movies_path, params: valid_new_movie
+      }.must_differ "Movie.count", 1
+
+      check_response(expected_type: Hash, expected_status: :created)
+    end 
+
+    it "does not add the same movie twice to the db" do 
+      expect {
+        post movies_path, params: invalid_new_movie
+      }.wont_change "Movie.count"
+    end 
+
+    it "it updates the inventory quantity of the movie if movie already exists" do 
+      post movies_path, params: invalid_new_movie
+
+      expect(movies(:three).inventory).must_equal 5
+    end
+  end 
 end
