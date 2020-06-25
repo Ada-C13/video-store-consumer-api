@@ -5,7 +5,7 @@ class MoviesController < ApplicationController
     if params[:query]
       data = MovieWrapper.search(params[:query])
     else
-      data = Movie.all
+      data = Movie.all.order('title ASC')
     end
 
     render status: :ok, json: data
