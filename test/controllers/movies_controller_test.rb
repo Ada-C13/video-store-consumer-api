@@ -108,13 +108,8 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
       expect { post movies_url, params: duplicate_movie_params }.wont_change "Movie.count"
       must_respond_with :bad_request
       expect(response.header['Content-Type']).must_include 'json'
-      # puts "HERE IS ERRORS:::: #{response.body["errors"]}"
-      # must include external_id
-      # expect(response.body).must_include 
-  
-      # Attempt to parse
-      # data = JSON.parse response.body
-      # data.must_be_kind_of Hash
+      expect(response.body).must_include "external_id"
+      expect(response.body).must_include "has already been taken"
     end
   end
 end

@@ -115,11 +115,6 @@ class RentalsControllerTest < ActionDispatch::IntegrationTest
       expect(rental.movie_id).must_equal movie.id
       expect(rental.due_date).must_equal Date.today + 5
       expect(rental.returned).must_equal true
-
-
-      
-
-
     end
      
     it "requires a valid movie title" do
