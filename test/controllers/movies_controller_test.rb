@@ -75,4 +75,58 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
 
     end
   end
+
+  describe "create" do
+    before do
+      @movie_hash = {
+        title: "xxxxxx", 
+        overview: "xxxxxxx",
+        release_date: "2017-01-11",
+        inventory: 23,
+        image_url: "hshsioadhisod",
+        external_id: 2389,
+      }
+      @invalid_movie_hash = {
+        title: nil, 
+        overview: "xxxxxxx",
+        release_date: "2017-01-11",
+        inventory: 23,
+        image_url: "hshsioadhisod",
+        external_id: 2389,
+      }
+    end
+   
+    it "can create a new movie with valid information accurately " do
+      expect { 
+        post movies_path, params: @movie_hash
+      }.must_differ "Movie.count", 1
+
+      
+      expect(Movie.last.title).must_equal @movie_hash[:title]
+      expect(Movie.last.overview).must_equal @movie_hash[:overview]
+ 
+      must_respond_with :success
+    end
+
+    it "can create a new movie with invalid information accurately " do
+
+      expect{
+        post movies_path, params: @invalid_movie_hash
+      }.wont_change "Movie.count"
+
+      must_respond_with :bad_request
+      data = JSON.parse @response.body
+      data.must_include "errors"
+
+    end
+
+    it "does not create a movie if title is not present, and responds with a redirect" do
+      post movies_path(@invalid_movie_hash)
+      
+      must_respond_with :bad_request
+      data = JSON.parse @response.body
+      data.must_include "errors"
+      data["errors"].must_include "title"
+    end
+  end
 end
