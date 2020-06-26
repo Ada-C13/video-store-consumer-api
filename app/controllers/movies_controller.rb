@@ -10,6 +10,24 @@ class MoviesController < ApplicationController
 
     render status: :ok, json: data
   end
+# new movie
+
+  def add_movie
+    new_movie = Movie.new(external_id: movie_params[:external_id], title: movie_params[:title],overview: movie_params[:overview], release_date: movie_params[:release_date], image_url: movie_params[:image_url], inventory: 7 )
+    if !Movie.find_by(external_id: new_movie.external_id) && new_movie.external_id != nil 
+
+      if new_movie.save
+        render status: :ok, json: {}
+      else
+        render status: :bad_request, json: { errors: movie.errors.messages }
+      end
+
+    else   
+      render status: :bad_request, json: {errors: "movie already in database"}
+    end 
+
+  end 
+
 
   def show
     render(
@@ -29,4 +47,9 @@ class MoviesController < ApplicationController
       render status: :not_found, json: { errors: { title: ["No movie with title #{params["title"]}"] } }
     end
   end
+
+  def movie_params
+    return params.permit(:external_id, :title, :inventory, :overview, :release_date, :image_url)
+  end
+
 end
