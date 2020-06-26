@@ -75,4 +75,50 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
 
     end
   end
+
+  describe "create" do
+    before do
+      @valid_movie = {
+        title: "XXXXX",
+        overview: "XXXXXXXX",
+        release_date: "2017-01-11",
+        inventory: 10,
+        image_url: "https://lh3.googleusercontent.com/pw/ACtC-3dgueD28nFt8fbmnEVSWrDdgXdH4dy91CXoWO818YTNFQlfnH-GN1O9t3zX4UEOGH3cncMC2Ze9WfNm13ofTlzOV97WdprqYmUPbj5H0oTS7Qwi8QtAEV8RFNyrcCJy09V04GFZQySqt9yhxf2v37Cg=w401-h397-no?authuser=0",
+        external_id: 2342
+      }
+
+      @invalid_movie = {
+        title: nil,
+        overview: "XXXXXXXX",
+        release_date: "2017-01-11",
+        inventory: 10,
+        image_url: "https://lh3.googleusercontent.com/pw/ACtC-3dgueD28nFt8fbmnEVSWrDdgXdH4dy91CXoWO818YTNFQlfnH-GN1O9t3zX4UEOGH3cncMC2Ze9WfNm13ofTlzOV97WdprqYmUPbj5H0oTS7Qwi8QtAEV8RFNyrcCJy09V04GFZQySqt9yhxf2v37Cg=w401-h397-no?authuser=0",
+        external_id: 2342
+      }
+    end
+    
+    it "can create a new valid movie instance/object" do 
+
+      expect{post movies_path, params: @valid_movie}.must_differ "Movie.count", 1
+      must_respond_with :success
+
+      last_movie = Movie.last
+      expect(last_movie.title).must_equal "XXXXX"
+    end
+
+    it "cannot create an invalid movie" do
+      expect{post movies_path, params: @invalid_movie}.wont_change "Movie.count"
+      must_respond_with :bad_request
+      data = JSON.parse @response.body
+      data.must_include "errors"
+    end
+
+    it "requires a valid movie title" do
+      post movies_path(@invalid_movie)
+      must_respond_with :bad_request
+      data = JSON.parse @response.body
+      data.must_include "errors"
+      data["errors"].must_include "title"
+    end
+  end
 end
