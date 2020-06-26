@@ -6,6 +6,15 @@ class Movie < ApplicationRecord
     self.inventory - Rental.where(movie: self, returned: false).length
   end
 
+  def self.recently_added
+    month = DateTime.now >> -1
+    self.where("created_at >= :last_month", last_month: month)
+  end
+
+  def self.popular
+    self.joins(:rentals)
+  end
+
   def image_url
     raw_value = read_attribute :image_url
     if !raw_value
