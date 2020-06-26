@@ -53,7 +53,7 @@ class MoviesController < ApplicationController
 
 
   def movie_params
-    return params.permit(:title, :overview, :release_date, :inventory, :available_inventory)
+    return params.permit(:title, :overview, :release_date, :inventory, :image_url, :external_id)
   end
 
 end
