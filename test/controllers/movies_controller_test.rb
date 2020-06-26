@@ -75,4 +75,27 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
 
     end
   end
+
+  describe "create" do
+    it "can create a movie with valid info" do
+      movie_hash = 
+        {
+          title: "Test",
+          overview: "Test overview",
+          inventory: 1,
+          external_id: 12345    
+        }
+      
+      expect {
+        post movies_path, params: movie_hash
+      }.must_differ "Movie.count", 1
+
+      new_movie = Movie.last
+      expect(new_movie.title).must_equal movie_hash[:title]
+      expect(new_movie.overview).must_equal movie_hash[:overview]
+      expect(new_movie.inventory).must_equal movie_hash[:inventory]
+      expect(new_movie.external_id).must_equal movie_hash[:external_id]
+      must_respond_with :success
+    end
+  end
 end
