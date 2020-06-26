@@ -11,11 +11,37 @@ class MoviesController < ApplicationController
     render status: :ok, json: data
   end
 
+  # TODO: create a new movie instance in our rental library 
+  def create
+    @movie = Movie.new(
+      title: params["title"],
+      overview: params["overview"],
+      release_date: params["release_date"],
+      image_url: params["image_url"],
+      external_id: params["external_id"],
+      inventory: 10
+    )
+
+    if @movie.save!
+      render(
+        status: :ok,
+        json: @movie.as_json(
+          only: [:title, :overview, :release_date, :inventory],
+          methods: [:available_inventory]
+          )
+      )
+    else
+      render status: :bad_request, json: { errors: { title: ["#{params["title"]} already exisits in our library"] } }
+    end
+      
+    
+  end
+
   def show
     render(
       status: :ok,
       json: @movie.as_json(
-        only: [:title, :overview, :release_date, :inventory],
+        only: [:title, :overview, :release_date, :inventory, :image_url],
         methods: [:available_inventory]
         )
       )
