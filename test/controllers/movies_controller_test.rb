@@ -75,4 +75,39 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
 
     end
   end
+
+  describe "create" do
+    before do
+      @valid_movie = {
+        title: "something",
+        overview: "something",
+        release_date: "01-01-2020",
+        inventory: 5,
+        image_url: "https://designerdoginfo.files.wordpress.com/2012/10/apricot-cavoodle-puppy-on-blue-blanket.jpg",
+        external_id: 6
+      }
+      @invalid_movie = {
+        inventory: 5,
+      }
+    end
+    
+
+    
+
+    it "can create a new movie with valid data" do
+      expect { post movies_path, params: @valid_movie }.must_differ "Movie.count", 1
+    end
+    
+    it "responds with bad request and errors for invalid data" do
+      expect { post movies_path, params: @invalid_movie }.wont_change "Movie.count"
+      
+      body = check_response(expected_type: Hash, expected_status: :bad_request)
+      expect(body.keys).must_include "errors"
+      expect(body["errors"].keys).must_include "title"
+      expect(body["errors"].keys).must_include "overview"
+      expect(body["errors"].keys).must_include "release_date"
+      expect(body["errors"].keys).must_include "external_id"
+    end
+
+  end
 end

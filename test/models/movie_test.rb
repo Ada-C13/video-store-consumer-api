@@ -6,7 +6,9 @@ class MovieTest < ActiveSupport::TestCase
       "title": "Hidden Figures",
       "overview": "Some text",
       "release_date": "1960-06-16",
-      "inventory": 8
+      "inventory": 8,
+      "image_url": "https://designerdoginfo.files.wordpress.com/2012/10/apricot-cavoodle-puppy-on-blue-blanket.jpg",
+      "external_id": 5,
     }
   }
 
