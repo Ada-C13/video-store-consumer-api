@@ -75,4 +75,54 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
 
     end
   end
+
+  describe "create" do
+    before do
+      @movie1 = 
+        {
+          title: "A movie", 
+          overview: "This is a movie.", 
+          release_date: Date.today, 
+          inventory: "10",
+          image_url: "https://cdn.pixabay.com/photo/2016/09/16/00/16/movie-1673021_1280.jpg", 
+          external_id: 11111111,
+        }
+
+        post movies_path, params: @movie1
+    end
+
+
+    it "can create a movie" do
+      movie_info =
+      {
+        title: "Star Coder",
+        overview: "An Ada student becomes the best coder on earth.",
+        release_date: Date.today,
+        inventory: "10",
+        image_url: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Golden_star.svg/1024px-Golden_star.svg.png",
+        external_id: 99999
+      }
+
+      expect {
+        post movies_path, params: movie_info
+      }.must_differ "Movie.count", 1
+    end
+
+    it "won't add a movie twice" do
+      movie_dup = 
+      {
+        title: "A movie", 
+        overview: "This is a movie.", 
+        release_date: Date.today, 
+        inventory: "10",
+        image_url: "https://cdn.pixabay.com/photo/2016/09/16/00/16/movie-1673021_1280.jpg", 
+        external_id: 11111111,
+      }
+
+      expect {
+        post movies_path, params: movie_dup
+      }.wont_change "Movie.count"
+    end
+  end
+
 end
