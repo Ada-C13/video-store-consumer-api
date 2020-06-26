@@ -6,7 +6,8 @@ class MovieTest < ActiveSupport::TestCase
       "title": "Hidden Figures",
       "overview": "Some text",
       "release_date": "1960-06-16",
-      "inventory": 8
+      "inventory": 8,
+      "external_id": 100001
     }
   }
 
@@ -25,6 +26,33 @@ class MovieTest < ActiveSupport::TestCase
 
     it "Has customers" do
       @movie.must_respond_to :customers
+    end
+  end
+
+  describe "validations" do
+    it "must have a title" do
+      @movie.title = nil
+
+      expect(@movie.valid?).must_equal false
+      expect(@movie.errors.messages).must_include :title
+      expect(@movie.errors.messages[:title]).must_equal ["can't be blank"]
+    end
+
+    it "must have an external id" do
+      @movie.external_id = nil
+
+      expect(@movie.valid?).must_equal false
+      expect(@movie.errors.messages).must_include :external_id
+      expect(@movie.errors.messages[:external_id]).must_equal ["can't be blank"]
+    end
+
+    it "cannot add two objects with the same external id" do
+      @movie.save
+      another_movie = Movie.create(movie_data)
+
+      expect(another_movie.valid?).must_equal false
+      expect(another_movie.errors.messages).must_include :external_id
+      expect(another_movie.errors.messages[:external_id]).must_equal ["has already been taken"]
     end
   end
 

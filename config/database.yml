@@ -20,7 +20,8 @@ test:
 
 production:
   <<: *default
-  database: video-store-consumer-api_production
-  username: video-store-consumer-api
-  password: <%= ENV['video-store-consumer-api_DATABASE_PASSWORD'] %>
-
+  database: <%= ENV['RDS_DB_NAME'] %>
+  username: <%= ENV['RDS_USERNAME'] %>
+  password: <%= ENV['RDS_PASSWORD'] %>
+  host: <%= ENV['RDS_HOSTNAME'] %>
+  port: <%= ENV['RDS_PORT'] %>

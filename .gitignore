@@ -4,6 +4,8 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+node_modules/
+
 # Ignore bundler config.
 /.bundle
 
@@ -22,4 +24,9 @@
 .env
 
 # Ignore master key for decrypting credentials and more.
-/config/master.key
+/config/master.keynode_modules/
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml

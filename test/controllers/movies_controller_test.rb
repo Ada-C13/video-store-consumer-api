@@ -75,4 +75,54 @@ class MoviesControllerTest < ActionDispatch::IntegrationTest
 
     end
   end
+
+  describe "create" do
+    let(:movie_data) {
+      {
+        title: "Fake Video",
+        overview: "fake overview",
+        release_date: "2020-01-28",
+        inventory: 10,
+        external_id: 9
+      }
+    }
+
+    it "can add a new movie to the database" do 
+      expect{
+        post movies_path, params: movie_data
+      }.must_differ "Movie.count", 1
+
+      must_respond_with :created
+    end
+
+    it "will respond with bad_request for invalid data" do 
+      movie_data[:title] = nil
+
+      expect {
+        post movies_path, params: movie_data
+      }.wont_change "Movie.count"
+
+      must_respond_with :bad_request 
+
+      expect(response.header['Content-Type']).must_include 'json'
+      body = JSON.parse(response.body)
+      expect(body["errors"].keys).must_include "title"
+    end
+
+    it "will not allow you to add two of the same movies" do
+      expect{
+        post movies_path, params: movie_data
+      }.must_differ "Movie.count", 1
+
+      expect{
+        post movies_path, params: movie_data
+      }.wont_change "Movie.count"
+
+      must_respond_with :bad_request 
+
+      expect(response.header['Content-Type']).must_include 'json'
+      body = JSON.parse(response.body)
+      expect(body["errors"].keys).must_include "external_id"
+    end
+  end
 end
