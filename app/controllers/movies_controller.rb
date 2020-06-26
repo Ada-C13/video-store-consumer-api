@@ -11,6 +11,28 @@ class MoviesController < ApplicationController
     render status: :ok, json: data
   end
 
+  def create
+    if Movie.find_by(title: params[:title])
+      render json: {
+        errors: ["movie already exists"]
+      }, status: :bad_request
+      return
+    end
+    movie = Movie.new(movie_params)
+    if movie.save
+      render json: movie.as_json(only: [:id]), status: :created
+      return
+    else
+      puts movie.errors.messages
+      render json: {
+          errors: movie.errors.messages
+        }, status: :bad_request
+      return
+      puts "these are the error messages #{movie.errors.messages}"
+    end
+  end
+  
+
   def show
     render(
       status: :ok,
@@ -22,6 +44,11 @@ class MoviesController < ApplicationController
   end
 
   private
+
+  def movie_params
+    return params.permit(:title, :overview, :release_date, :total_inventory, :image_url, :external_id)
+  end
+
 
   def require_movie
     @movie = Movie.find_by(title: params[:title])
