@@ -3,11 +3,15 @@ class RentalsController < ApplicationController
   before_action :require_customer, only: [:check_out, :check_in]
 
   # TODO: make sure that wave 2 works all the way
+
   def check_out
     rental = Rental.new(movie: @movie, customer: @customer, due_date: params[:due_date])
 
     if rental.save
-      render status: :ok, json: {}
+      render status: :ok, json: { customer: @customer.as_json(
+        only: [:id, :name, :registered_at, :address, :city, :state, :postal_code, :phone, :account_credit],
+        methods: [:movies_checked_out_count]
+      ) }
     else
       render status: :bad_request, json: { errors: rental.errors.messages }
     end
