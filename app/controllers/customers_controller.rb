@@ -18,6 +18,30 @@ class CustomersController < ApplicationController
     )
   end
 
+  def show
+    @customer = Customer.find_by(id: params[:id])
+
+    if @customer
+      @customer_rentals = @customer.rentals.map{|rental| { 
+        title: rental.movie.title, 
+        checkout_date: rental.checkout_date,
+        due_date: rental.due_date,
+        status: rental.returned,
+        }}
+      render json: 
+        @customer_rentals.as_json(),
+        status: :ok
+        return
+    else
+      render json: {
+        errors: [
+          'Customer Not Found'
+        ]
+      }, status: :not_found
+      return
+    end
+  end
+
 private
   def parse_query_args
     errors = {}
